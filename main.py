@@ -41,10 +41,8 @@ if __name__ == '__main__':
                         lines[len(lines)-1].append(pendingString)
                     # Append the ; to the list
                     lines[len(lines)-1].append(';')
-                    # Break the reading of the line
-                    lines.append([])
+                    # Reset the pending string
                     pendingString = ""
-                    break
                 elif char in punctuation:
                     # If the character is a punctuation append the pending string to the list if it is not empty
                     if pendingString != "":
@@ -67,8 +65,38 @@ if __name__ == '__main__':
                     pendingString += char
             if pendingString != "":
                 lines[len(lines)-1].append(pendingString)
+        # Append a jump line to the list
+        lines[len(lines)-1].append('\n')
         lines.append([])
     # Remove the empty lists
     lines = [x for x in lines if x != []]
-    # Print the list of lists
-    print(lines)
+    preProcessedStrings = []
+    for line in lines:
+        for word in line:
+            preProcessedStrings.append(word)
+    # Remove the multiline comments
+    preProcessed = []
+    # Flags
+    multilineComment = False
+    slash = False
+    asterisk = False
+    # Iterate over the pre processed strings
+    for word in preProcessedStrings:
+        if word == '/' and multilineComment == False:
+            slash = True
+            asterisk = False
+        elif word == '*' and slash and multilineComment == False:
+            asterisk = False
+            slash = False
+            multilineComment = True
+        elif word == '*' and multilineComment:
+            asterisk = True
+            slash = False
+        elif word == '/' and asterisk and multilineComment:
+            multilineComment = False
+            asterisk = False
+            slash = False
+        elif not multilineComment:
+            preProcessed.append(word)
+    # Print all the pre processed strings
+    print(preProcessed)
