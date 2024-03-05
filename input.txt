@@ -1,4 +1,8 @@
 int x = 10; // commment
     if( x == 10){
         printf("x is 10");
+        /* This 
+        commment
+        is
+        multi-line */
     }
