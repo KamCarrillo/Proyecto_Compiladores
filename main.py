@@ -99,4 +99,48 @@ if __name__ == '__main__':
         elif not multilineComment:
             preProcessed.append(word)
     # Print all the pre processed strings
+    print("Preprocessed strings:")
     print(preProcessed)
+
+    #Symbol table with word and token type
+    Symbol_Table={'int':'keyword','char':'keyword','bool':'keyword','float':'keyword',
+                'break':'keyword','const':'keyword', 'continue':'keyword','default':'keyword',
+                'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
+                'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
+                'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
+                'printf':'keyword','scanf':'keyword','puts':'keyword','getchar':'keyword',
+                'puts':'keyword','short':'keyword'}
+    
+    #Classify lexemes into tokens
+    Tokens_Types=[[]]
+    act=0;
+    for word in preProcessed:
+        if word =='\n':
+            Tokens_Types.append([])
+            act+=1
+            continue
+        if word in operators:
+            Tokens_Types[act].append('op')
+            continue
+        if word in punctuation:
+            Tokens_Types[act].append('punct')
+            continue
+        if word in Symbol_Table:
+            Tokens_Types[act].append(Symbol_Table[word])
+            continue
+        if word in operators:
+            Tokens_Types[act].append('op')
+            continue
+        if re.match('^[A-Za-z]([A-Zz-z0-9_])*$',word):
+            Symbol_Table[word]='Id'
+            Tokens_Types[act].append('Id')
+            continue
+
+    # Print all the Tokens
+    print("Tokens: ")
+    for line in Tokens_Types:
+        print(line)
+
+    
+
+    
