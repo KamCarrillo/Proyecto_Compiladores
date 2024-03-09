@@ -135,6 +135,10 @@ if __name__ == '__main__':
             Symbol_Table[word]='Id'
             Tokens_Types[act].append('Id')
             continue
+        if re.match('^[0-9]+$', word):
+            Symbol_Table[word] = 'const'
+            Tokens_Types[act].append('const')
+            continue
 
     # Print all the Tokens
     print("Tokens: ")
