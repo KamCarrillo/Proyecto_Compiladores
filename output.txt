@@ -1,5 +1,22 @@
+Tokens:
 keyword Id op const punct 
 keyword punct Id op op const punct punct 
 punct lit punct punct 
 punct lit punct punct 
 punct 
+
+Tokens recount:
+	Keywords:
+		int -> 1, if -> 1, x -> 1, 10 -> 1, 
+	Identifiers:
+		x -> 1, 
+	Constants:
+		10 -> 1, 
+	Literals:
+		"x is 10" -> 1, "Hola" -> 1, 
+	Operators:
+		= -> 3, 
+	Punctuations:
+		; -> 3, ( -> 3, ) -> 3, { -> 1, } -> 1, 
+
+Total Tokens: 22

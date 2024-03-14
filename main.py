@@ -1,6 +1,11 @@
 import sys
 import regex as re
-
+def dictionaryIncrement(dictionary, key):
+    if key in dictionary:
+        dictionary[key] += 1
+    else:
+        dictionary[key] = 1
+    return dictionary
 if __name__ == '__main__':
     input_file = "input.txt"
     output_file = "output.txt"
@@ -12,6 +17,14 @@ if __name__ == '__main__':
         else:
             input_file = sys.argv[1]
             output_file = sys.argv[2]
+    # Dictionary to store the final tokens
+    keywordTokens = {}
+    idTokens = {}
+    constTokens = {}
+    litTokens = {}
+    opTokens = {}
+    punctTokens = {}
+    totalTokens = 0
     #List of operators and punctuations
     operators = {'+', '-', '*', '=', '/', '%', '!', '<', '>'}
     punctuation = {'{', '}', '(', ')', '[', ']', ';', ','}
@@ -199,41 +212,89 @@ if __name__ == '__main__':
             continue
         if word in operators:
             Tokens_Types[act].append('op')
+            opTokens = dictionaryIncrement(opTokens, word)
+            totalTokens += 1
             continue
         if word in punctuation:
             Tokens_Types[act].append('punct')
+            punctTokens = dictionaryIncrement(punctTokens, word)
+            totalTokens += 1
             continue
         if word in Symbol_Table:
             Tokens_Types[act].append(Symbol_Table[word])
+            keywordTokens = dictionaryIncrement(keywordTokens, word)
+            totalTokens += 1
             continue
         if word in operators:
             Tokens_Types[act].append('op')
+            opTokens = dictionaryIncrement(opTokens, word)
+            totalTokens += 1
             continue
         if re.match('^[A-Za-z]([A-Zz-z0-9_])*$',word):
+            idTokens = dictionaryIncrement(idTokens, word)
+            totalTokens += 1
             Symbol_Table[word]='Id'
             Tokens_Types[act].append('Id')
             continue
         if re.match('^[0-9]+$', word):
+            constTokens = dictionaryIncrement(constTokens, word)
+            totalTokens += 1
             Symbol_Table[word] = 'const'
             Tokens_Types[act].append('const')
             continue
         if re.match('(".*")+',word):
+            litTokens = dictionaryIncrement(litTokens, word)
+            totalTokens += 1
             Symbol_Table[word]='lit'
             Tokens_Types[act].append('lit')
             continue
     # Remove the empty lists
     Tokens_Types = [x for x in Tokens_Types if x != []]
-    # Print all the Tokens
-    print("Tokens: ")
-    for line in Tokens_Types:
-        print(line)
     # Write tokenns into the file
     try:
         with open(output_file, 'w') as file:
+            if(totalTokens==0):
+                file.write("No tokens found")
+                sys.exit(0)
+            file.write("Tokens:\n")
             for line in Tokens_Types:
                 for token in line:
                     file.write(token + " ")
                 file.write('\n')
+            file.write("\n")
+            file.write("Tokens recount:\n")
+            if len(keywordTokens) > 0:
+                file.write("\tKeywords:\n\t\t")
+                for key in keywordTokens:
+                    file.write(f"{key} -> {keywordTokens[key]}, ")
+                file.write("\n")
+            if len(idTokens) > 0:
+                file.write("\tIdentifiers:\n\t\t")
+                for key in idTokens:
+                    file.write(f"{key} -> {idTokens[key]}, ")
+                file.write("\n")
+            if len(constTokens) > 0:
+                file.write("\tConstants:\n\t\t")
+                for key in constTokens:
+                    file.write(f"{key} -> {constTokens[key]}, ")
+                file.write("\n")
+            if len(litTokens) > 0:
+                file.write("\tLiterals:\n\t\t")
+                for key in litTokens:
+                    file.write(f"{key} -> {litTokens[key]}, ")
+                file.write("\n")
+            if len(opTokens) > 0:
+                file.write("\tOperators:\n\t\t")
+                for key in opTokens:
+                    file.write(f"{key} -> {opTokens[key]}, ")
+                file.write("\n")
+            if len(punctTokens) > 0:
+                file.write("\tPunctuations:\n\t\t")
+                for key in punctTokens:
+                    file.write(f"{key} -> {punctTokens[key]}, ")
+                file.write("\n")
+            file.write("\n")
+            file.write(f"Total Tokens: {totalTokens}")
     except Exception as e:
         print(f"An error occurred while writing the file: {e}")
         sys.exit(1)
