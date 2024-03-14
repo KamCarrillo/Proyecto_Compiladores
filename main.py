@@ -4,10 +4,30 @@ import regex as re
 import pandas as pd
 
 if __name__ == '__main__':
+    
     #List of operators and punctuations
-    # TODO: Check if the operators and punctuations are correct and complete
     operators = {'+', '-', '*', '=', '/', '%', '!', '<', '>'}
     punctuation = {'{', '}', '(', ')', '[', ']', ';', ','}
+
+    #Symbol table with word and token type
+    Symbol_Table={'int':'keyword','char':'keyword','bool':'keyword','float':'keyword',
+                'break':'keyword','const':'keyword', 'continue':'keyword','default':'keyword',
+                'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
+                'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
+                'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
+                'printf':'keyword','scanf':'keyword','puts':'keyword','getchar':'keyword',
+                'puts':'keyword','short':'keyword'}
+    
+
+    preProcessed = []
+    preProcessedStrings = []
+    Tokens_Types=[[]]
+    
+    # Flags
+    multilineComment = False
+    slash = False
+    asterisk = False
+
     # Read the file
     try:
         with open('input.txt', 'r') as file:
@@ -136,19 +156,12 @@ if __name__ == '__main__':
             lines[len(lines)-1].append('\n')
             lines.append([])
 
-
-
     # Remove the empty lists
     lines = [x for x in lines if x != []]
-    preProcessedStrings = []
     for line in lines:
         for word in line:
             preProcessedStrings.append(word)
-    preProcessed = []
-    # Flags
-    multilineComment = False
-    slash = False
-    asterisk = False
+    
     # Iterate over the pre processed strings
     for word in preProcessedStrings:
         if re.match('(".*")+',word):
@@ -170,22 +183,9 @@ if __name__ == '__main__':
             slash = False
         elif not multilineComment:
             preProcessed.append(word)
-    """
-    # Print all the pre processed strings
-    print("Preprocessed strings:")
-    print(preProcessed)
-    """
-    #Symbol table with word and token type
-    Symbol_Table={'int':'keyword','char':'keyword','bool':'keyword','float':'keyword',
-                'break':'keyword','const':'keyword', 'continue':'keyword','default':'keyword',
-                'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
-                'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
-                'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
-                'printf':'keyword','scanf':'keyword','puts':'keyword','getchar':'keyword',
-                'puts':'keyword','short':'keyword'}
+
     
     #Classify lexemes into tokens
-    Tokens_Types=[[]]
     act=0
     for word in preProcessed:
         if word =='\n':
