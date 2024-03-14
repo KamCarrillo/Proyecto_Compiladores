@@ -1,5 +1,5 @@
 keyword Id op const punct 
 keyword punct Id op op const punct punct 
-keyword punct lit punct punct 
-keyword punct lit punct punct 
+punct lit punct punct 
+punct lit punct punct 
 punct 

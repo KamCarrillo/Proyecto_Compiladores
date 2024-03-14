@@ -1,10 +1,17 @@
-import os
 import sys
 import regex as re
-import pandas as pd
 
 if __name__ == '__main__':
-    
+    input_file = "input.txt"
+    output_file = "output.txt"
+    # Check if the user provided the input and output files
+    if len(sys.argv) == 2 or len(sys.argv) == 3:
+        if len(sys.argv) == 2:
+            input_file = sys.argv[1]
+            output_file = "output_" + input_file
+        else:
+            input_file = sys.argv[1]
+            output_file = sys.argv[2]
     #List of operators and punctuations
     operators = {'+', '-', '*', '=', '/', '%', '!', '<', '>'}
     punctuation = {'{', '}', '(', ')', '[', ']', ';', ','}
@@ -15,12 +22,12 @@ if __name__ == '__main__':
                 'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
                 'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
                 'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
-                'printf':'keyword','scanf':'keyword','puts':'keyword','getchar':'keyword',
-                'puts':'keyword','short':'keyword'}
+                'short':'keyword'}
     
-
+    # Auxiliar lists
     preProcessed = []
     preProcessedStrings = []
+    # Final list where the tokens will be stored
     Tokens_Types=[[]]
     
     # Flags
@@ -30,7 +37,7 @@ if __name__ == '__main__':
 
     # Read the file
     try:
-        with open('input.txt', 'r') as file:
+        with open(input_file, 'r') as file:
             data = file.read()
     except Exception as e:
         print(f"An error occurred while reading the file: {e}")
@@ -166,7 +173,6 @@ if __name__ == '__main__':
     for word in preProcessedStrings:
         if re.match('(".*")+',word):
             preProcessed.append(word)
-            #continue
         elif word == '/' and multilineComment == False:
             slash = True
             asterisk = False
@@ -184,7 +190,6 @@ if __name__ == '__main__':
         elif not multilineComment:
             preProcessed.append(word)
 
-    
     #Classify lexemes into tokens
     act=0
     for word in preProcessed:
@@ -222,9 +227,13 @@ if __name__ == '__main__':
     print("Tokens: ")
     for line in Tokens_Types:
         print(line)
-    # Write them to a file
-    with open('output.txt', 'w') as file:
-        for line in Tokens_Types:
-            for token in line:
-                file.write(token + " ")
-            file.write('\n')
+    # Write tokenns into the file
+    try:
+        with open(output_file, 'w') as file:
+            for line in Tokens_Types:
+                for token in line:
+                    file.write(token + " ")
+                file.write('\n')
+    except Exception as e:
+        print(f"An error occurred while writing the file: {e}")
+        sys.exit(1)
