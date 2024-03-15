@@ -23,5 +23,5 @@ To get started, clone the repository:
 git clone https://github.com/KamCarrillo/Proyecto_Compiladores.git
 cd Proyecto_Compiladores
 ```
-```License
+License
 This project is licensed under the MIT License.
