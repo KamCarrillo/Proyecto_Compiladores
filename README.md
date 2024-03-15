@@ -16,12 +16,12 @@ Where:
 python3: Specifies the Python interpreter to be used.
 main.py: Is the main Python script file.
 input.txt: Is the input file that the program will operate on.
-
-Installation
+```
+```Installation
 To get started, clone the repository:
 
 git clone https://github.com/KamCarrillo/Proyecto_Compiladores.git
 cd Proyecto_Compiladores
-
-License
+```
+```License
 This project is licensed under the MIT License.
