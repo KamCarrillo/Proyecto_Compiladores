@@ -30,12 +30,12 @@ if __name__ == '__main__':
     punctuation = {'{', '}', '(', ')', '[', ']', ';', ','}
 
     #Symbol table with word and token type
-    Symbol_Table={'int':'keyword','char':'keyword','bool':'keyword','float':'keyword',
-                'break':'keyword','const':'keyword', 'continue':'keyword','default':'keyword',
-                'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
-                'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
-                'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
-                'short':'keyword'}
+    Keywords={'int':'keyword','char':'keyword','bool':'keyword','float':'keyword',
+            'break':'keyword','const':'keyword', 'continue':'keyword','default':'keyword',
+            'do':'keyword','while':'keyword','if':'keyword','else':'keyword',
+            'for':'keyword','return':'keyword','switch':'keyword','case':'keyword',
+            'void':'keyword','double':'keyword','long':'keyword','goto':'keyword',
+            'short':'keyword'}
     
     # Auxiliar lists
     preProcessed = []
@@ -60,133 +60,81 @@ if __name__ == '__main__':
     data = data.split('\n')
 
     # Create a list of lists
+    Comment=False
     lines = [[]]
     for line in data:
-        # If it conatins a literal
-        if re.match('.*(".*")+.*', line):
-            line = re.split('(".*")+', line)
-            temp = []
-            for subLine in line:
-                if re.match('(".*")+', subLine):
-                    temp.append(subLine)
-                    continue
-                if subLine == '':
-                    continue
-                # Replace multiple spaces with a single space
-                subLine = re.sub(' +', ' ', str(subLine))
-                # Remove the comments
-                if subLine.find('//') != -1:
-                    subLine = subLine[:line.find('//')]
-                # Split the line by space
-                subLine = subLine.split(' ')
-                for piece in subLine:
-                    if piece == '':
-                        continue
-                    temp.append(piece)
-            line = temp
-            # For each word in the line
-            for word in line:
-                if word == '':
-                    continue
-                if re.match('(".*")+', word):
-                    lines[len(lines)-1].append(word)
-                    continue
-                # For each character in the word
-                pendingString = ""
-                for char in word:
-                    # If the character is ;
-                    if char == ';':
-                        # Append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the ; to the list
-                        lines[len(lines)-1].append(';')
-                        # Reset the pending string
-                        pendingString = ""
-                    elif char in punctuation:
-                        # If the character is a punctuation append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the punctuation to the list
-                        lines[len(lines)-1].append(char)
-                        # Reset the pending string
-                        pendingString = ""
-                    elif char in operators:
-                        # If the character is an operator append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the operator to the list
-                        lines[len(lines)-1].append(char)
-                        # Reset the pending string
-                        pendingString = ""
-                    else:
-                        # If the character is a letter or number
-                        # Append the character to the pending string
-                        pendingString += char
-                if pendingString != "":
-                    lines[len(lines)-1].append(pendingString)
-            # Append a jump line to the list
-            lines[len(lines)-1].append('\n')
-            lines.append([])
-        else:
+        line = re.split('(".*")+', line)
+        temp = []
+        for subLine in line:
+            if re.match('(".*")+', subLine):
+                temp.append(subLine)
+                continue
+            if subLine == '':
+                continue
             # Replace multiple spaces with a single space
-            line = re.sub(' +', ' ', line)
+            subLine = re.sub(' +', ' ', str(subLine))
             # Remove the comments
-            if line.find('//') != -1:
-                line = line[:line.find('//')]
+            if subLine.find('//') != -1:
+                subLine = subLine[:subLine.find('//')]
+                comment=True
             # Split the line by space
-            line = line.split(' ')
-            # For each word in the line
-            for word in line:
-                # For each character in the word
-                pendingString = ""
-                for char in word:
-                    # If the character is ;
-                    if char == ';':
-                        # Append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the ; to the list
-                        lines[len(lines)-1].append(';')
-                        # Reset the pending string
-                        pendingString = ""
-                    elif char in punctuation:
-                        # If the character is a punctuation append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the punctuation to the list
-                        lines[len(lines)-1].append(char)
-                        # Reset the pending string
-                        pendingString = ""
-                    elif char in operators:
-                        # If the character is an operator append the pending string to the list if it is not empty
-                        if pendingString != "":
-                            lines[len(lines)-1].append(pendingString)
-                        # Append the operator to the list
-                        lines[len(lines)-1].append(char)
-                        # Reset the pending string
-                        pendingString = ""
-                    else:
-                        # If the character is a letter or number
-                        # Append the character to the pending string
-                        pendingString += char
-                if pendingString != "":
-                    lines[len(lines)-1].append(pendingString)
-            # Append a jump line to the list
-            lines[len(lines)-1].append('\n')
-            lines.append([])
+            subLine = subLine.split(' ')
+            for piece in subLine:
+                if piece == '':
+                    continue
+                temp.append(piece)
+            #Check if the rest of the line is a comment
+            if Comment:
+                Comment=False
+                break
+        line = temp
+        # For each word in the line
+        for word in line:
+            if word == '':
+                continue
+            if re.match('(".*")+', word):
+                lines[len(lines)-1].append(word)
+                continue
+            # For each character in the word
+            pendingString = ""
+            for char in word:
+                # If the character is ;
+                if char in punctuation:
+                    # If the character is a punctuation append the pending string to the list if it is not empty
+                    if pendingString != "":
+                        lines[len(lines)-1].append(pendingString)
+                    # Append the punctuation to the list
+                    lines[len(lines)-1].append(char)
+                    # Reset the pending string
+                    pendingString = ""
+                elif char in operators:
+                    # If the character is an operator append the pending string to the list if it is not empty
+                    if pendingString != "":
+                        lines[len(lines)-1].append(pendingString)
+                    # Append the operator to the list
+                    lines[len(lines)-1].append(char)
+                    # Reset the pending string
+                    pendingString = ""
+                else:
+                    # If the character is a letter or number
+                    # Append the character to the pending string
+                    pendingString += char
+            if pendingString != "":
+                lines[len(lines)-1].append(pendingString)
+        # Append a jump line to the list
+        lines[len(lines)-1].append('\n')
+        lines.append([])
 
     # Remove the empty lists
     lines = [x for x in lines if x != []]
     for line in lines:
         for word in line:
             preProcessedStrings.append(word)
-    
+
+
     # Iterate over the pre processed strings
     for word in preProcessedStrings:
-        if re.match('(".*")+',word):
-            preProcessed.append(word)
-        elif word == '/' and multilineComment == False:
+        if word == '/' and multilineComment == False:
             slash = True
             asterisk = False
         elif word == '*' and slash and multilineComment == False:
@@ -201,7 +149,10 @@ if __name__ == '__main__':
             asterisk = False
             slash = False
         elif not multilineComment:
-            preProcessed.append(word)
+            if re.match('(".*")+',word):
+                preProcessed.append(word)
+            else:
+                preProcessed.append(word)
 
     #Classify lexemes into tokens
     act=0
@@ -220,32 +171,24 @@ if __name__ == '__main__':
             punctTokens = dictionaryIncrement(punctTokens, word)
             totalTokens += 1
             continue
-        if word in Symbol_Table:
-            Tokens_Types[act].append(Symbol_Table[word])
+        if word in Keywords:
+            Tokens_Types[act].append(Keywords[word])
             keywordTokens = dictionaryIncrement(keywordTokens, word)
             totalTokens += 1
             continue
-        if word in operators:
-            Tokens_Types[act].append('op')
-            opTokens = dictionaryIncrement(opTokens, word)
-            totalTokens += 1
-            continue
-        if re.match('^[A-Za-z]([A-Zz-z0-9_])*$',word):
+        if re.match('^[A-Za-z]([A-Za-z0-9_])*$',word):
             idTokens = dictionaryIncrement(idTokens, word)
             totalTokens += 1
-            Symbol_Table[word]='Id'
             Tokens_Types[act].append('Id')
             continue
         if re.match('^[0-9]+$', word):
             constTokens = dictionaryIncrement(constTokens, word)
             totalTokens += 1
-            Symbol_Table[word] = 'const'
             Tokens_Types[act].append('const')
             continue
         if re.match('(".*")+',word):
             litTokens = dictionaryIncrement(litTokens, word)
             totalTokens += 1
-            Symbol_Table[word]='lit'
             Tokens_Types[act].append('lit')
             continue
     # Remove the empty lists

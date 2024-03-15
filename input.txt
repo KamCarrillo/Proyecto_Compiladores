@@ -1,9 +1,22 @@
-int x = 10; // commment
+int main(){
+    int x = 10; // commment
     if( x == 10){
-        printf("x is 10");
+        //printf() sirve para imprimir;
+        printf("x is //10");
         printf("Hola");
         /* This 
         commment
-        is
+        "is"
         multi-line */
     }
+
+    for(int i=0; i<x; i++){
+        printf("*")
+    }
+
+    while(x>0){
+        x--;
+    }
+
+    long this_is_var_2;
+}
