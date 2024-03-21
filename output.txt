@@ -11,6 +11,7 @@ punct
 keyword punct Id op const punct punct 
 Id op op punct 
 punct 
+Id op Id op Id op Id punct 
 keyword Id punct 
 punct 
 
@@ -18,14 +19,14 @@ Tokens recount:
 	Keywords:
 		int -> 3, if -> 1, for -> 1, while -> 1, long -> 1, 
 	Identifiers:
-		main -> 1, x -> 5, printf -> 3, i -> 3, this_is_var_2 -> 1, 
+		main -> 1, x -> 6, printf -> 3, i -> 3, a -> 1, b -> 1, c -> 1, this_is_var_2 -> 1, 
 	Constants:
 		10 -> 2, 0 -> 2, 
 	Literals:
 		"x is //10" -> 1, "Hola" -> 1, "*" -> 1, 
 	Operators:
-		= -> 4, < -> 1, + -> 2, > -> 1, - -> 2, 
+		= -> 5, < -> 1, + -> 2, > -> 1, - -> 2, / -> 1, * -> 1, 
 	Punctuations:
-		( -> 7, ) -> 7, { -> 4, ; -> 7, } -> 4, 
+		( -> 7, ) -> 7, { -> 4, ; -> 8, } -> 4, 
 
-Total Tokens: 66
+Total Tokens: 74

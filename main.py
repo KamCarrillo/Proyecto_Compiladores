@@ -76,7 +76,7 @@ if __name__ == '__main__':
             # Remove the comments
             if subLine.find('//') != -1:
                 subLine = subLine[:subLine.find('//')]
-                comment=True
+                Comment=True
             # Split the line by space
             subLine = subLine.split(' ')
             for piece in subLine:
@@ -134,13 +134,18 @@ if __name__ == '__main__':
 
     # Iterate over the pre processed strings
     for word in preProcessedStrings:
+        if word != '/' and word != '*':
+            slash = False
+            asterisk=False
         if word == '/' and multilineComment == False:
             slash = True
             asterisk = False
+            preProcessed.append(word)
         elif word == '*' and slash and multilineComment == False:
             asterisk = False
             slash = False
             multilineComment = True
+            preProcessed.pop()
         elif word == '*' and multilineComment:
             asterisk = True
             slash = False
@@ -149,10 +154,7 @@ if __name__ == '__main__':
             asterisk = False
             slash = False
         elif not multilineComment:
-            if re.match('(".*")+',word):
-                preProcessed.append(word)
-            else:
-                preProcessed.append(word)
+            preProcessed.append(word)
 
     #Classify lexemes into tokens
     act=0

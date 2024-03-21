@@ -7,7 +7,9 @@ int main(){
         /* This 
         commment
         "is"
-        multi-line */
+        multi-line 
+        a*b/c
+        */
     }
 
     for(int i=0; i<x; i++){
@@ -18,5 +20,6 @@ int main(){
         x--;
     }
 
+    x=a/b*c;
     long this_is_var_2;
 }
